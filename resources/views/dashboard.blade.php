@@ -158,6 +158,18 @@
                                         </a>
                                     </td>
                                     <td class="px-6 py-3 text-center">
+                                        <form action="/provision/{{ $provision->id }}" method="POST"
+                                            onsubmit="return confirm('Tem certeza que deseja excluir este provisionamento?')">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                    class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td class="px-6 py-3 text-center">
                                         <a href="/installments/{{ $provision->id }}"
                                         class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">
                                             Parcelas
