@@ -1,44 +1,123 @@
-version: '3.8'
-
 services:
 
-  app:
-    build: .
-    container_name: pf_app
+  nginx: 
+    image: nginx:alpine
+    container_name: pf_nginx
     ports:
-      - "8000:80"
+      - 8000:80
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - pf_network
+
+  app:
+    build: 
+      context: . 
+      dockerfile: docker/php/Dockerfile
+    container_name: pf_app
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
+      - redis
     environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      AUTOCOMPOSER_INSTALL: "true"
+      AUTO_MIGRATE: "false"
+    restart: unless-stopped
+    networks:
+      - pf_network
 
   db:
-    image: mysql:8.0
+    image: mysql:8.3
     container_name: pf_db
-    restart: always
+    restart: unless-stopped
+    command: --default-authentication-plugin=caching_sha2_password
     environment:
-      MYSQL_DATABASE: provisioning_finances
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: leonardo
-      MYSQL_PASSWORD: 2615
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3305:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - pf_network
+
+  redis: 
+    image: redis:alpine
+    container_name: pf_redis
+    restart: unless-stopped
+    networks:
+      - pf_network
+
+  node: 
+    image: node:20
+    container_name: pf_node
+    ports:
+      - 5173:5173
+    working_dir: /var/www/html
+    depends_on:
+      - app
+    volumes:
+      - ./:/var/www/html
+      - node_modules:/var/www/html/node_modules
+    networks:
+      - pf_network
+    command: sh -C "corepack enable && pnpm install --config.confirmModulesPurge=false && pnpm dev --host 0.0.0.0" 
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pf_mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - pf_network
+
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pf_phpmyadmin
-    restart: always
+    restart: unless-stopped
+    platform: linux/x86_64
     ports:
       - "8080:80"
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      PMA_PORT: 3305
     depends_on:
       - db
 
+  queue: 
+    build: 
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: pf_queue
+    command: ['php', 'artisan', 'queue:work', '--tries=3', '--sleep=1']
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    depends_on:
+      - app
+      - redis
+    networks:
+      - pf_network
+
 volumes:
   db_data:
+  node_modules: 
+
+networks:
+  pf_network: 
+    driver: bridge
