@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('provisions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->string('description');
             $table->decimal('base_amount', 12, 2);
             $table->decimal('interest_rate', 5, 2)->nullable();
