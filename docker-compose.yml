@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: .
+    container_name: pf_app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+  db:
+    image: mysql:8.0
+    container_name: pf_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: provisioning_finances
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: leonardo
+      MYSQL_PASSWORD: 2615
+    ports:
+      - "3305:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pf_phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  db_data:
