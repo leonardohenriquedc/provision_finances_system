@@ -1,6 +1,6 @@
 services:
 
-  nginx: 
+  nginx:
     image: nginx:alpine
     container_name: pf_nginx
     ports:
@@ -14,8 +14,8 @@ services:
       - pf_network
 
   app:
-    build: 
-      context: . 
+    build:
+      context: .
       dockerfile: docker/php/Dockerfile
     container_name: pf_app
     volumes:
@@ -54,14 +54,14 @@ services:
       - pf_network
 
 
-  redis: 
+  redis:
     image: redis:alpine
     container_name: pf_redis
     restart: unless-stopped
     networks:
       - pf_network
 
-  node: 
+  node:
     image: node:20
     container_name: pf_node
     ports:
@@ -100,8 +100,8 @@ services:
     depends_on:
       - db
 
-  queue: 
-    build: 
+  queue:
+    build:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: pf_queue
@@ -117,8 +117,8 @@ services:
 
 volumes:
   db_data:
-  node_modules: 
+  node_modules:
 
 networks:
-  pf_network: 
+  pf_network:
     driver: bridge
