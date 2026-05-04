@@ -7,6 +7,7 @@ use App\Models\Provision;
 use App\Models\ProvisionInstallment;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use PHPUnit\Logging\OpenTestReporting\Status;
 
 class ProvisionController extends Controller
 {
@@ -98,22 +99,22 @@ class ProvisionController extends Controller
 
             for ($i = 1; $i <= $installments; $i++) {
 
-                // tempo (t)
-            switch ($data['interest_period'] ?? 'MONTH') {
+                    // tempo (t)
+                switch ($data['interest_period'] ?? 'MONTH') {
 
-                case 'DAY':
-                    $t = $i; // dias
-                    break;
+                    case 'DAY':
+                        $t = $i; // dias
+                        break;
 
-                case 'YEAR':
-                    $t = $i; // anos
-                    break;
+                    case 'YEAR':
+                        $t = $i; // anos
+                        break;
 
-                case 'MONTH':
-                default:
-                    $t = $i; // meses
-                    break;
-            }
+                    case 'MONTH':
+                    default:
+                        $t = $i; // meses
+                        break;
+                }
 
                 // ajuste conforme base
                 if ($data['interest_period'] === 'YEAR') {
@@ -152,13 +153,19 @@ class ProvisionController extends Controller
                         break;
                 }
 
+                $status = 'OPEN';
+
+                if ($dueDate < Carbon::parse(time())){
+                    $status = 'LATE';
+                }
+
                 // 5. criar parcela
                 ProvisionInstallment::create([
                     'provision_id' => $provision->id,
                     'installment_number' => $i,
                     'amount' => round($amount, 2),
                     'due_date' => $dueDate,
-                    'status' => 'OPEN',
+                    'status' => $status,
                 ]);
             }
 
