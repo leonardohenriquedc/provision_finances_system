@@ -41,8 +41,13 @@ class ProvisionInstallmentController extends Controller
             })
             ->whereMonth('due_date', $month)
             ->whereYear('due_date', $year)
-            ->orderBy('due_date')
-            ->get();
+            ->orderBy('due_date');
+
+        if($request->filled('status')){
+            $installments->where('status', $request->status);
+        }
+
+        $installments = $installments->get();
 
         return view('view-all-installments-per-period', compact('installments', 'month'));
     }

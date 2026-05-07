@@ -9,18 +9,49 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
 
             <!-- Header info -->
-            <div class="bg-white p-6 rounded-lg shadow mb-6 flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-700">
-                        Mês selecionado: {{ str_pad($month, 2, '0', STR_PAD_LEFT) }}
-                    </h3>
-                </div>
+    <div class="bg-white p-6 rounded-lg shadow mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        
+        <div>
+            <h3 class="text-lg font-semibold text-gray-700">
+                Mês selecionado: {{ str_pad($month, 2, '0', STR_PAD_LEFT) }}
+            </h3>
+        </div>
 
-                <a href={{ route('dashboard') }}
-                   class="text-gray-600 hover:underline text-sm">
-                    ← Voltar
-                </a>
-            </div>
+        <form method="GET" class="flex flex-col sm:flex-row items-center gap-2">
+            
+            <input type="hidden" name="month" value="{{ $month }}">
+
+            <select 
+                name="status"
+                class="border rounded px-3 py-2 text-sm"
+            >
+                <option value="">Todos</option>
+                <option value="OPEN" {{ request('status') == 'OPEN' ? 'selected' : '' }}>
+                    Em aberto
+                </option>
+                <option value="PAID" {{ request('status') == 'PAID' ? 'selected' : '' }}>
+                    Pago
+                </option>
+                <option value="LATE" {{ request('status') == 'LATE' ? 'selected' : '' }}>
+                    Atrasado
+                </option>
+            </select>
+
+            <button
+                type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            >
+                Filtrar
+            </button>
+        </form>
+
+        <a 
+            href="{{ route('dashboard') }}"
+            class="text-gray-600 hover:underline text-sm"
+        >
+            ← Voltar
+        </a>
+    </div>
 
             <!-- Tabela -->
             <div class="bg-white shadow-md rounded-xl p-6">
