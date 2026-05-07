@@ -43,29 +43,44 @@
 
             <!-- Filtro -->
             <div class="bg-white p-4 rounded-lg shadow mb-6">
-                <form method="GET" class="flex flex-col md:flex-row gap-2">
+            <form method="GET" class="flex flex-col md:flex-row gap-2">
 
-                    <input 
-                        type="number" 
-                        name="month" 
-                        min="1" 
-                        max="12"
-                        value="{{ request('month') }}"
-                        placeholder="Filtrar por mês (1-12)"
-                        class="border rounded px-3 py-2 w-full md:w-64"
-                    >
+                <input 
+                    type="number" 
+                    name="month" 
+                    min="1" 
+                    max="12"
+                    value="{{ request('month') }}"
+                    placeholder="Filtrar por mês (1-12)"
+                    class="border rounded px-3 py-2 w-full md:w-64"
+                >
 
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                        Filtrar
-                    </button>
+                <!-- Filtrar (rota atual) -->
+                <button 
+                    type="submit"
+                    formaction="{{ route('dashboard') }}"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                >
+                    Filtrar
+                </button>
 
-                    <a href="{{ route('dashboard') }}" 
-                       class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition text-center">
-                        Limpar
-                    </a>
+                <!-- Ver parcelas -->
+                <button 
+                    type="submit"
+                    formaction="{{ route('periodinstallments') }}"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                >
+                    Ver parcelas do mês
+                </button>
 
-                </form>
-            </div>
+                <!-- Limpar -->
+                <a href="{{ route('dashboard') }}" 
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition text-center">
+                    Limpar
+                </a>
+
+            </form>
+        </div>
 
             <!-- Tabela -->
             <div class="bg-white shadow-md rounded-xl p-6">

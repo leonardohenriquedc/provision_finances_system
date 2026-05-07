@@ -29,6 +29,24 @@ class ProvisionInstallmentController extends Controller
         return view('view-installment', compact('installment'));
     }
 
+    public function viewCurrentInstallments(Request $request)
+    {
+        $user = $request->user();
+
+        $month = $request->input('month') ?? now()->month;
+        $year = now()->year;
+
+        $installments = ProvisionInstallment::whereHas('provision', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->whereMonth('due_date', $month)
+            ->whereYear('due_date', $year)
+            ->orderBy('due_date')
+            ->get();
+
+        return view('view-all-installments-per-period', compact('installments', 'month'));
+    }
+
     public function updateInstallmentStatus($id, Request $request)
     {
         $user = $request->user();

@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function (){
     Route::get('installments/{id}', [ProvisionInstallmentController::class, 'index'])->name('installments');
     Route::get('/installment/{id}', [ProvisionInstallmentController::class, 'view'])->name('installment');
     Route::put('/installment/{id}', [ProvisionInstallmentController::class, 'updateInstallmentStatus']);
+    Route::get('/periodinstallments', [ProvisionInstallmentController::class, 'viewCurrentInstallments'])->name('periodinstallments');
 });
 
 Route::middleware('auth')->group(function () {
