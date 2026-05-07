@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Provision;
 use App\Models\ProvisionInstallment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ProvisionInstallmentController extends Controller
@@ -33,15 +34,31 @@ class ProvisionInstallmentController extends Controller
     {
         $user = $request->user();
 
-        $month = $request->input('month') ?? now()->month;
         $year = now()->year;
 
         $installments = ProvisionInstallment::whereHas('provision', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })
-            ->whereMonth('due_date', $month)
+            });
+
+        $month = $request->filled('month');
+
+        if($request->filled('month')){
+
+        $month = is_numeric($request->month)
+            ? (int) $request->month
+            : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
+
+            $installments->whereMonth('due_date', $month)
             ->whereYear('due_date', $year)
             ->orderBy('due_date');
+
+            
+            $month = Carbon::create()
+                ->month($month)
+                ->translatedFormat('F');
+        } else {
+            $month = "todos";
+        }
 
         if($request->filled('status')){
             $installments->where('status', $request->status);
