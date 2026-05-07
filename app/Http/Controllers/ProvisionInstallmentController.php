@@ -42,15 +42,15 @@ class ProvisionInstallmentController extends Controller
 
         $month = $request->filled('month');
 
-        if($request->filled('month')){
+        if($request->filled('month') && $request->month !== 'todos'){
 
-        $month = is_numeric($request->month)
-            ? (int) $request->month
-            : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
+            $month = is_numeric($request->month)
+                ? (int) $request->month
+                : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
 
-            $installments->whereMonth('due_date', $month)
-            ->whereYear('due_date', $year)
-            ->orderBy('due_date');
+                $installments->whereMonth('due_date', $month)
+                ->whereYear('due_date', $year)
+                ->orderBy('due_date');
 
             
             $month = Carbon::create()
