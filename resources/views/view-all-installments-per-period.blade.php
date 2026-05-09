@@ -10,17 +10,16 @@
 
             <!-- Header info -->
     <div class="bg-white p-6 rounded-lg shadow mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-        
-        <div>
-            <h3 class="text-lg font-semibold text-gray-700">
-                Mês selecionado: {{ str_pad($month, 2, '0', STR_PAD_LEFT) }}
-            </h3>
-        </div>
 
         <form method="GET" class="flex flex-col sm:flex-row items-center gap-2">
-            
-            <input type="hidden" name="month" value="{{ $month }}">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">
+                    <label for="month">Mês selecionado: </label>
+                    <input type="text" class="border-none bg-transparent focus:outline-none focus:ring-0 p-0 m-0" name="month" value="{{ $month }}">
+                </h3>
+            </div>      
 
+    
             <select 
                 name="status"
                 class="border rounded px-3 py-2 text-sm"

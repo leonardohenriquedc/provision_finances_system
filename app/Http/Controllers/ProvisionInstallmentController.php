@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Provision;
 use App\Models\ProvisionInstallment;
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProvisionInstallmentController extends Controller
@@ -44,18 +46,24 @@ class ProvisionInstallmentController extends Controller
 
         if($request->filled('month') && $request->month !== 'todos'){
 
-            $month = is_numeric($request->month)
-                ? (int) $request->month
-                : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
+            try{    
+                $month = is_numeric($request->month)
+                    ? (int) $request->month
+                    : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
+    
+                    $installments->whereMonth('due_date', $month)
+                    ->whereYear('due_date', $year)
+                    ->orderBy('due_date');
 
-                $installments->whereMonth('due_date', $month)
-                ->whereYear('due_date', $year)
-                ->orderBy('due_date');
 
-            
-            $month = Carbon::create()
-                ->month($month)
-                ->translatedFormat('F');
+            }catch(InvalidFormatException $e ) {
+                $month = Carbon::now()->month;
+
+                $month = Carbon::create()
+                    ->month($month)
+                    ->translatedFormat('F');
+            }
+
         } else {
             $month = "todos";
         }
