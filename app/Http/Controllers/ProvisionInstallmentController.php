@@ -74,7 +74,13 @@ class ProvisionInstallmentController extends Controller
 
         $installments = $installments->get();
 
-        return view('view-all-installments-per-period', compact('installments', 'month'));
+        $total = 0;
+
+        foreach($installments as $installment){
+            $total += $installment->amount;
+        }
+
+        return view('view-all-installments-per-period', compact('installments', 'month', 'total'));
     }
 
     public function updateInstallmentStatus($id, Request $request)
