@@ -54,6 +54,16 @@ class ProvisionController extends Controller
             $month = "todos";
         }
 
+        if($request->filled('year') && strlen($request->year) === 4){
+            try {
+                $year = (int) $request->year;
+
+                $query->whereYear("competence_date", $year);
+            }catch(InvalidFormatException $e){
+                $year = Carbon::now()->year;
+            }
+        }
+
         $provisions = $query->get();
 
         // KPIs

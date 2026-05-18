@@ -46,10 +46,16 @@
             <form method="GET" class="flex flex-col md:flex-row gap-2">
 
             <div class="flex items-center gap-3">
-            <label for="month" class="text-sm font-medium text-gray-700">
-                Mês selecionado
-            </label>
+                <label for="year" class="text-sm font-medium text-gray-700">
+                    Ano selecionado
+                </label>
+                <input type="number" name="year" id="year" class="block w-48 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-center font-medium text-gray-700 shadow-sm transition duration-150 ease-in-out focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
+            <div class="flex items-center gap-3">
+                <label for="month" class="text-sm font-medium text-gray-700">
+                    Mês selecionado
+                </label>
             <select
                 name="month"
                 id="month"

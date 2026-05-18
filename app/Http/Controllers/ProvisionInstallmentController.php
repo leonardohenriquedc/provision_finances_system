@@ -68,6 +68,16 @@ class ProvisionInstallmentController extends Controller
             $month = "todos";
         }
 
+        if($request->filled('year') && strlen($request->year) === 4){
+            try {
+                $year = (int) $request->year;
+
+                $installments->whereYear("due_date", $year);
+            }catch(InvalidFormatException $e){
+                $year = Carbon::now()->year;
+            }
+        }
+
         if($request->filled('status')){
             $installments->where('status', $request->status);
         }
