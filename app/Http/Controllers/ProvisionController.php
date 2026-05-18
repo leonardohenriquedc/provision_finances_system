@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Http\Request;
 use App\Models\Provision;
 use App\Models\ProvisionInstallment;
@@ -31,9 +32,26 @@ class ProvisionController extends Controller
         $query = Provision::with('provisionInstallments')
             ->where('user_id', $user->id);
 
-        // Filtro por mês
-        if ($request->filled('month')) {
-            $query->whereMonth('competence_date', $request->month);
+        $month = "";
+
+        if($request->filled('month') && $request->month !== 'todos'){
+
+            try{    
+                $month = is_numeric($request->month)
+                    ? (int) $request->month
+                    : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
+
+                    $query->whereMonth('competence_date', $month);
+            }catch(InvalidFormatException $e ) {
+                $month = Carbon::now()->month;
+
+                $month = Carbon::create()
+                    ->month($month)
+                    ->translatedFormat('F');
+            }
+
+        } else {
+            $month = "todos";
         }
 
         $provisions = $query->get();
@@ -63,7 +81,8 @@ class ProvisionController extends Controller
             'provisions',
             'total',
             'paid',
-            'pending'
+            'pending',
+            'month'
         ));
     }
     public function create(Request $request)

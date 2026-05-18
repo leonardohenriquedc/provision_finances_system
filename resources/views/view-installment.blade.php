@@ -96,6 +96,11 @@
                         </select>
                     </div>
 
+                    <div class="mb-4">
+                        <p class="block text-sm font-medium text-gray-700">
+                            Atualizado em: {{ $installment->updated_at }}
+                        </p>
+                    </div>
                     <!-- BOTÕES -->
                     <div class="flex justify-between">
 

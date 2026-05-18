@@ -19,17 +19,38 @@
             </div>  
 
         <form method="GET" class="flex flex-col sm:flex-row items-center gap-2">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-700">
-                    <label for="month">Mês selecionado: </label>
-                    <input type="text" class="border-none bg-transparent focus:outline-none focus:ring-0 p-0 m-0" name="month" value="{{ $month }}">
-                </h3>
-            </div>        
+        <div class="flex items-center gap-3">
+            <label for="month" class="text-sm font-medium text-gray-700">
+                Mês selecionado
+            </label>
+
+            <select
+                name="month"
+                id="month"
+                onchange="this.form.submit()"
+                class="block w-48 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-center font-medium text-gray-700 shadow-sm transition duration-150 ease-in-out focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+                <option value="todos"  {{ $month == "todos" ? 'selected' : '' }}>Todos</option>
+                <option value="1"  {{ $month == 1 ? 'selected' : '' }}>Janeiro</option>
+                <option value="2"  {{ $month == 2 ? 'selected' : '' }}>Fevereiro</option>
+                <option value="3"  {{ $month == 3 ? 'selected' : '' }}>Março</option>
+                <option value="4"  {{ $month == 4 ? 'selected' : '' }}>Abril</option>
+                <option value="5"  {{ $month == 5 ? 'selected' : '' }}>Maio</option>
+                <option value="6"  {{ $month == 6 ? 'selected' : '' }}>Junho</option>
+                <option value="7"  {{ $month == 7 ? 'selected' : '' }}>Julho</option>
+                <option value="8"  {{ $month == 8 ? 'selected' : '' }}>Agosto</option>
+                <option value="9"  {{ $month == 9 ? 'selected' : '' }}>Setembro</option>
+                <option value="10" {{ $month == 10 ? 'selected' : '' }}>Outubro</option>
+                <option value="11" {{ $month == 11 ? 'selected' : '' }}>Novembro</option>
+                <option value="12" {{ $month == 12 ? 'selected' : '' }}>Dezembro</option>
+            </select>
+        </div>    
 
     
             <select 
                 name="status"
-                class="border rounded px-3 py-2 text-sm"
+                onchange="this.form.submit()"
+                class="block w-48 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-center font-medium text-gray-700 shadow-sm transition duration-150 ease-in-out focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
                 <option value="">Todos</option>
                 <option value="OPEN" {{ request('status') == 'OPEN' ? 'selected' : '' }}>
