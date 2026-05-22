@@ -85,12 +85,40 @@ class ProvisionInstallmentController extends Controller
         $installments = $installments->get();
 
         $total = 0;
+        $chart = [
+            "janeiro" => 0,
+            "fevereiro" => 0,
+            "março" => 0,
+            "abril" => 0,
+            "maio" => 0,
+            "junho" => 0,
+            "julho" => 0,
+            "agosto" => 0,
+            "setembro" => 0,
+            "outubro" => 0,
+            "novembro" => 0,
+            "dezembro" => 0,
+        ];
 
         foreach($installments as $installment){
-            $total += $installment->amount;
-        }
 
-        return view('view-all-installments-per-period', compact('installments', 'month', 'total'));
+            $total += $installment->amount;
+
+            $month_chart = Carbon::parse($installment->due_date)
+                ->translatedFormat('F');
+
+            if(!isset($chart[$month_chart])){
+                $chart[$month_chart] = 0;
+            }
+
+            $chart[$month_chart] += $installment->amount;
+        }
+        
+        $labels = array_keys($chart);
+        $values = array_values($chart);
+        
+
+        return view('view-all-installments-per-period', compact('installments', 'month', 'total', 'labels', 'values'));
     }
 
     public function updateInstallmentStatus($id, Request $request)
