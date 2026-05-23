@@ -32,7 +32,8 @@
                                     type="number"
                                     name="year"
                                     id="year"
-                                    value="{{ request('year', date('Y')) }}"
+                                    value="{{ request()->has('year') ? request('year') : "" }}"
+                                    placeholder="todos"
                                     onchange="this.form.submit()"
                                     class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 >
@@ -123,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const labels = @json($labels);
     const values = @json($values);
+
+    console.log(labels);
+    console.log(values);
 
     const ctx = document.getElementById('salesChart');
 
