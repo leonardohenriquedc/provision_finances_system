@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use Illuminate\Http\Request;
+use League\CommonMark\Delimiter\Bracket;
 
 class ProvisionInstallmentController extends Controller
 {
@@ -86,18 +87,89 @@ class ProvisionInstallmentController extends Controller
 
         $total = 0;
         $chart = [
-            "janeiro" => 0,
-            "fevereiro" => 0,
-            "março" => 0,
-            "abril" => 0,
-            "maio" => 0,
-            "junho" => 0,
-            "julho" => 0,
-            "agosto" => 0,
-            "setembro" => 0,
-            "outubro" => 0,
-            "novembro" => 0,
-            "dezembro" => 0,
+            "janeiro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "fevereiro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "março" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "abril" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "maio" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "junho" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "julho" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "agosto" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "setembro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "outubro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "novembro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
+
+            "dezembro" => [
+                "total" => 0,
+                "open" => 0,
+                "paid" => 0,
+                "late" => 0,
+            ],
         ];
 
         foreach($installments as $installment){
@@ -107,18 +179,26 @@ class ProvisionInstallmentController extends Controller
             $month_chart = Carbon::parse($installment->due_date)
                 ->translatedFormat('F');
 
-            if(!isset($chart[$month_chart])){
-                $chart[$month_chart] = 0;
-            }
+            $chart[$month_chart]['total'] += $installment->amount;
 
-            $chart[$month_chart] += $installment->amount;
+            switch($installment->status){
+                case 'PAID': 
+                    $chart[$month_chart]['paid'] += $installment->amount;
+                    break;
+                case 'OPEN': 
+                    $chart[$month_chart]['open'] += $installment->amount;
+                    break;
+                case 'LATE': 
+                    $chart[$month_chart]['late'] += $installment->amount;
+            }
         }
         
         $labels = array_keys($chart);
-        $values = array_values($chart);
-        
+        $total_month = array_column($chart, 'total');
+        $paid = array_column($chart, 'paid');
+        $late = array_column($chart, 'late');
 
-        return view('view-all-installments-per-period', compact('installments', 'month', 'total', 'labels', 'values'));
+        return view('view-all-installments-per-period', compact('installments', 'month', 'total', 'labels', 'total_month', 'paid', 'late'));
     }
 
     public function updateInstallmentStatus($id, Request $request)

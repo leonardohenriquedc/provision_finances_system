@@ -123,10 +123,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const labels = @json($labels);
-    const values = @json($values);
+    const total = @json($total_month);
+    const paid = @json($paid);
+    const late = @json($late);
 
-    console.log(labels);
-    console.log(values);
+    console.log("Paid: ", paid);
 
     const ctx = document.getElementById('salesChart');
 
@@ -136,10 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
         data: {
             labels: labels,
 
-            datasets: [{
-                label: 'Parcelas',
-                data: values
-            }]
+            datasets: [
+                {
+                    label: 'Total',
+                    data: total,
+                    backgroundColor: 'rgba(59, 130, 246, 100)',
+                },
+                {
+                    label: 'Pago',
+                    data: paid,
+                    backgroundColor: 'rgba(34, 197, 94, 100)'
+                },
+                {
+                    label: 'Atrasado',
+                    data: late,
+                    backgroundColor: 'rgba(239, 68, 68, 100)',
+                }
+            ],
         },
 
         options: {
