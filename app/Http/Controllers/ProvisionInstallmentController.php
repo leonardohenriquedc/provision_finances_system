@@ -53,15 +53,13 @@ class ProvisionInstallmentController extends Controller
                     : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
     
                     $installments->whereMonth('due_date', $month)
-                    ->whereYear('due_date', $year)
                     ->orderBy('due_date');
-
-
             }catch(InvalidFormatException $e ) {
                 $month = Carbon::now()->month;
 
                 $month = Carbon::create()
                     ->month($month)
+                    ->year($year)
                     ->translatedFormat('F');
             }
 
@@ -192,6 +190,7 @@ class ProvisionInstallmentController extends Controller
                     $chart[$month_chart]['late'] += $installment->amount;
             }
         }
+
         
         $labels = array_keys($chart);
         $total_month = array_column($chart, 'total');
