@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Parcelas do Mês
+            Provisionamentos Mensais
         </h2>
     </x-slot>
 
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="bg-white shadow-md rounded-xl p-6">
 
                 <h3 class="text-xl font-semibold text-gray-700 mb-6">
-                    Lista de Parcelas
+                    Persistencia dos Provisionamentos
                 </h3>
 
                 <div class="overflow-x-auto">
