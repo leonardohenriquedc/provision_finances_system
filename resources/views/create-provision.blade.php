@@ -25,13 +25,19 @@
 
                     <!-- VALOR -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">
-                            Valor da Parcela
-                        </label>
-                        <input type="number" step="0.01" name="base_amount"
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                               required>
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Valor da Parcela
+                    </label>
+
+                    <input
+                        type="text"
+                        name="base_amount"
+                        inputmode="decimal"
+                        placeholder="0,00"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                        required
+                    >
+                </div>
 
                     <!-- JUROS -->
                     <div class="grid grid-cols-2 gap-4 mb-4">

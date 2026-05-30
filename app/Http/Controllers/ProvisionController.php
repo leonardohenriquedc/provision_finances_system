@@ -99,9 +99,13 @@ class ProvisionController extends Controller
     {
         $user = $request->user();
 
+        $request->merge([
+            'base_amount' => str_replace(',', '.', $request->base_amount)
+        ]);
+
         $data = $request->validate([
             'description' => 'required|string|max:255',
-            'base_amount' => 'required|numeric|min:0',
+            'base_amount' => 'required|string|min:0',
             'interest_rate' => 'nullable|numeric|min:0',
             'interest_type' => 'nullable|in:SIMPLE,COMPOUND',
             'interest_period' => 'nullable|in:DAY,MONTH,YEAR',
