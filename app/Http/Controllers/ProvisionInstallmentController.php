@@ -204,19 +204,31 @@ class ProvisionInstallmentController extends Controller
     {
         $user = $request->user();
 
-        $data = $request->validate([
-            'status' => 'required|in:OPEN,PAID,LATE',
+        $request->merge([
+            'amount' => $request->filled('amount')
+                ? str_replace(',', '.', $request->amount)
+                : null,
         ]);
 
-        // busca a parcela garantindo que pertence ao usuário
+        $data = $request->validate([
+            'status' => 'required|in:OPEN,PAID,LATE',
+            'amount' => 'nullable|numeric|min:0'
+        ]);
+
         $installment = ProvisionInstallment::whereHas('provision', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->findOrFail($id);
 
-        // atualização
         $installment->update([
             'status' => $data['status']
         ]);
+
+        if($data['amount']){
+            $installment->update([
+                'amount' => $data['amount']
+                ]);
+        }
+
 
         return redirect()->route('installments', $installment->provision->id);
     }

@@ -53,9 +53,10 @@
                             Valor
                         </label>
                         <input type="text"
-                               value="R$ {{ number_format($installment->amount, 2, ',', '.') }}"
+                                name="amount"
+                               value="{{ number_format($installment->amount, 2, ',', '.') }}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100"
-                               readonly>
+                               >
                     </div>
 
                     <!-- VENCIMENTO -->
