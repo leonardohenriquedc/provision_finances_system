@@ -211,7 +211,7 @@ class ProvisionInstallmentController extends Controller
         ]);
 
         $data = $request->validate([
-            'status' => 'required|in:OPEN,PAID,LATE',
+            'status' => 'required|in:OPEN,PAID,LATE,LATE_PAYMENT',
             'amount' => 'nullable|numeric|min:0'
         ]);
 

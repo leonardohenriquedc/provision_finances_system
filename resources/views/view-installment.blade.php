@@ -94,6 +94,11 @@
                                 Atrasado
                             </option>
 
+                            <option value="LATE_PAYMENT"
+                                {{ $installment->status == 'LATE_PAYMENT' ? 'selected' : '' }}>
+                                Pago Atrasado
+                            </option>
+
                         </select>
                     </div>
 

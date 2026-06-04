@@ -64,6 +64,8 @@
                                     <td class="px-6 py-3 text-center">
                                         @if($installment->status === 'PAID')
                                             <span class="text-green-600 font-semibold">Pago</span>
+                                        @elseif($installment->status === 'LATE_PAYMENT')
+                                            <span class="text-black-600 font-semibold">Pago Atrasado</span>
                                         @elseif($installment->status === 'LATE')
                                             <span class="text-red-600 font-semibold">Atrasado</span>
                                         @else
