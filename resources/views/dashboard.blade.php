@@ -105,6 +105,81 @@
             </form>
         </div>
 
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 m-4">
+            <div class="bg-white p-6 rounded-2xl shadow h-96">
+                <h1>Total Provisionado X Provisões Concluidas</h1>
+                <canvas id="salesChart"></canvas>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow h-96">
+                <h1>Total de Provisionamentos por datas</h1>
+                <canvas id="provisionsChart"></canvas>
+            </div>
+        </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const paid = @json($paid);
+    const pending = @json($pending);
+
+    const ctx = document.getElementById('salesChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cumprido', 'Provisionado'],
+            datasets: [{
+                data: [paid, pending],
+                backgroundColor: [
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(34, 197, 94, 0.8)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let labels = [];
+        let values = [];
+
+        const provisions = @json($chartValues);
+        
+        for (const [date, value] of Object.entries(provisions)) {
+            labels.push(date);
+            values.push(value);
+        }
+
+        const ctx = document.getElementById('provisionsChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Provisionamentos",
+                    data: values,
+                    borderColor: 'rgba(59, 130, 246, 0.8)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    })
+</script>
+
             <!-- Tabela -->
             <div class="bg-white shadow-md rounded-xl p-6">
 
@@ -146,7 +221,7 @@
 
                                     $qtdParcelas = $installments->count() ?: 1;
 
-                                    $next = $installments->where('status', '!=', 'PAID')->first();
+                                    $next = $installments->whereNotIn('status', ['PAID', 'LATE_PAYMENT'])->first();
                                 @endphp
 
                                 <tr class="border-t hover:bg-gray-50 transition">
@@ -176,7 +251,7 @@
                                         @if($next)
                                             <span class="text-yellow-600 font-semibold">Pendente</span>
                                         @else
-                                            <span class="text-green-600 font-semibold">Pago</span>
+                                            <span class="text-green-600 font-semibold">Cumprido</span>
                                         @endif
                                     </td>
 

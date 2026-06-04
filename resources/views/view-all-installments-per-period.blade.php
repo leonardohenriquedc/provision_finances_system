@@ -127,8 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const paid = @json($paid);
     const late = @json($late);
 
-    console.log("Paid: ", paid);
-
     const ctx = document.getElementById('salesChart');
 
     new Chart(ctx, {

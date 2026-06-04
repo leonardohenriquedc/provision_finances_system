@@ -71,10 +71,19 @@ class ProvisionController extends Controller
         $paid = 0;
         $pending = 0;
 
+        $chartValues = [];
+
         foreach ($provisions as $provision) {
             $installments = $provision->provisionInstallments;
 
             $sum = $installments->sum('amount') ?: $provision->base_amount;
+
+            if(!array_key_exists($provision->competence_date, $chartValues)){
+                $chartValues[$provision->competence_date] = 0;    
+            }
+
+            $chartValues[$provision->competence_date] += $sum;
+
 
             $total += $sum;
 
@@ -89,6 +98,7 @@ class ProvisionController extends Controller
 
         return view('dashboard', compact(
             'provisions',
+            'chartValues',
             'total',
             'paid',
             'pending',
