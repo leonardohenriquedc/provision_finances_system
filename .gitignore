@@ -27,3 +27,4 @@ Thumbs.db
 Projeto do sistema de provisionamento financeiro.md
 .env-docker
 .env-local
+.php-cs-fixer.dist.php

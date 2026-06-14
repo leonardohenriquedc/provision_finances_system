@@ -79,27 +79,48 @@
 
                     </div>
 
-                    <!-- BASE -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">
-                            Base da Taxa
-                        </label>
-                        <select name="interest_period"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                            <option value="">Selecionar</option>
-                            <option value="DAY"
-                                {{ old('interest_period', $provision->interest_period) == 'DAY' ? 'selected' : '' }}>
-                                Dia
-                            </option>
-                            <option value="MONTH"
-                                {{ old('interest_period', $provision->interest_period) == 'MONTH' ? 'selected' : '' }}>
-                                Mês
-                            </option>
-                            <option value="YEAR"
-                                {{ old('interest_period', $provision->interest_period) == 'YEAR' ? 'selected' : '' }}>
-                                Ano
-                            </option>
-                        </select>
+                    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- BASE -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Base da Taxa
+                            </label>
+                            <select name="interest_period"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option value="">Selecionar</option>
+                                <option value="DAY"
+                                    {{ old('interest_period', $provision->interest_period) == 'DAY' ? 'selected' : '' }}>
+                                    Dia
+                                </option>
+                                <option value="MONTH"
+                                    {{ old('interest_period', $provision->interest_period) == 'MONTH' ? 'selected' : '' }}>
+                                    Mês
+                                </option>
+                                <option value="YEAR"
+                                    {{ old('interest_period', $provision->interest_period) == 'YEAR' ? 'selected' : '' }}>
+                                    Ano
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- TIPO DE TRANSAÇÃO -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Tipo de Transação
+                            </label>
+                            <select name="transaction_type"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option value="">Selecionar</option>
+                                <option value="DEBIT"
+                                    {{ old('transaction_type', $provision->transaction_type) == 'DEBIT' ? 'selected' : '' }}>
+                                    Débito
+                                </option>
+                                <option value="CREDIT"
+                                    {{ old('transaction_type', $provision->transaction_type) == 'CREDIT' ? 'selected' : '' }}>
+                                    Crédito
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- PARCELAS -->

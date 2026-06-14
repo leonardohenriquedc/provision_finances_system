@@ -65,7 +65,8 @@
                     </div>
 
                     <!-- BASE DO JUROS -->
-                    <div class="mb-4">
+                  <div class="mb-4 grid grid-cols-2 gap-4">
+                    <div>
                         <label class="block text-sm font-medium text-gray-700">
                             Base da Taxa
                         </label>
@@ -77,6 +78,19 @@
                             <option value="YEAR">Ano</option>
                         </select>
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Tipo de Transação
+                        </label>
+                        <select name="transaction_type"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            <option value="">Selecionar</option>
+                            <option value="DEBIT">Débito</option>
+                            <option value="CREDIT">Crédito</option>
+                        </select>
+                    </div>
+                </div>
 
                     <!-- PARCELAS -->
                     <div class="mb-4">

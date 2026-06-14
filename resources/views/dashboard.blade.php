@@ -194,84 +194,109 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
 
-                        <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
-                            <tr>
-                                <th class="px-6 py-3 text-left">Descrição</th>
-                                <th class="px-6 py-3 text-right">Parcela</th>
-                                <th class="px-6 py-3 text-right">Total</th>
-                                <th class="px-6 py-3 text-center">Parcelas</th>
-                                <th class="px-6 py-3 text-center">Status</th>
-                                <th class="px-6 py-3 text-center">Próxima Parcela</th>
-                                <th class="px-6 py-3 text-center">Competência</th>
-                                <th class="px-6 py-3 text-center">Ações</th>
-                            </tr>
-                        </thead>
+                    <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Descrição</th>
+                            <th class="px-6 py-3 text-right">Parcela</th>
+                            <th class="px-6 py-3 text-right">Total</th>
+                            <th class="px-6 py-3 text-center">Parcelas</th>
+                            <th class="px-6 py-3 text-center">Status</th>
+                            <th class="px-6 py-3 text-center">Próxima Parcela</th>
+                            <th class="px-6 py-3 text-center">Tipo de Transação</th>
+                            <th class="px-6 py-3 text-center">Ações</th>
+                        </tr>
+                    </thead>
 
-                        <tbody class="text-gray-700 text-sm">
-                            @forelse ($provisions as $provision)
+                    <tbody class="text-gray-700 text-sm">
+                        @forelse ($provisions as $provision)
 
-                                @php
-                                    $installments = $provision->provisionInstallments;
+                            @php
+                                $installments = $provision->provisionInstallments;
 
-                                    $parcela = $installments->first()->amount ?? $provision->base_amount;
+                                $parcela = $installments->first()->amount ?? $provision->base_amount;
 
-                                    $totalLinha = $installments->sum('amount') ?: $provision->base_amount;
+                                $totalLinha = $installments->sum('amount') ?: $provision->base_amount;
 
-                                    $qtdParcelas = $installments->count() ?: 1;
+                                $qtdParcelas = $installments->count() ?: 1;
 
-                                    $next = $installments->whereNotIn('status', ['PAID', 'LATE_PAYMENT'])->first();
-                                @endphp
+                                $next = $installments->whereNotIn('status', ['PAID', 'LATE_PAYMENT'])->first();
+                            @endphp
 
-                                <tr class="border-t hover:bg-gray-50 transition">
+                            <tr class="border-t hover:bg-gray-50 transition">
 
-                                    <!-- Descrição -->
-                                    <td class="px-6 py-3 font-medium">
-                                        {{ $provision->description }}
-                                    </td>
+                                <!-- Descrição -->
+                                <td class="px-6 py-3 font-medium">
+                                    {{ $provision->description }}
+                                </td>
 
-                                    <!-- Parcela -->
-                                    <td class="px-6 py-3 text-right text-blue-600 font-semibold">
-                                        R$ {{ number_format($parcela, 2, ',', '.') }}
-                                    </td>
+                                <!-- Parcela -->
+                                <td class="px-6 py-3 text-right text-blue-600 font-semibold">
+                                    R$ {{ number_format($parcela, 2, ',', '.') }}
+                                </td>
 
-                                    <!-- Total -->
-                                    <td class="px-6 py-3 text-right text-green-600 font-semibold">
-                                        R$ {{ number_format($totalLinha, 2, ',', '.') }}
-                                    </td>
+                                <!-- Total -->
+                                <td class="px-6 py-3 text-right text-green-600 font-semibold">
+                                    R$ {{ number_format($totalLinha, 2, ',', '.') }}
+                                </td>
 
-                                    <!-- Qtd -->
-                                    <td class="px-6 py-3 text-center">
-                                        {{ $qtdParcelas }}
-                                    </td>
+                                <!-- Quantidade de Parcelas -->
+                                <td class="px-6 py-3 text-center">
+                                    {{ $qtdParcelas }}
+                                </td>
 
-                                    <!-- Status -->
-                                    <td class="px-6 py-3 text-center">
-                                        @if($next)
-                                            <span class="text-yellow-600 font-semibold">Pendente</span>
-                                        @else
-                                            <span class="text-green-600 font-semibold">Cumprido</span>
-                                        @endif
-                                    </td>
+                                <!-- Status -->
+                                <td class="px-6 py-3 text-center">
+                                    @if($next)
+                                        <span class="text-yellow-600 font-semibold">
+                                            Pendente
+                                        </span>
+                                    @else
+                                        <span class="text-green-600 font-semibold">
+                                            Cumprido
+                                        </span>
+                                    @endif
+                                </td>
 
-                                    <!-- Próxima parcela -->
-                                    <td class="px-6 py-3 text-center">
-                                        {{ $next ? \Carbon\Carbon::parse($next->due_date)->format('d/m/Y') : '-' }}
-                                    </td>
+                                <!-- Próxima Parcela -->
+                                <td class="px-6 py-3 text-center">
+                                    {{ $next ? \Carbon\Carbon::parse($next->due_date)->format('d/m/Y') : '-' }}
+                                </td>
 
-                                    <!-- Data -->
-                                    <td class="px-6 py-3 text-center">
-                                        {{ \Carbon\Carbon::parse($provision->competence_date)->format('d/m/Y') }}
-                                    </td>
-                                    <td class="px-6 py-3 text-center">
+                                <!-- Tipo de Transação -->
+                                <td class="px-6 py-3 text-center">
+                                    @if($provision->transaction_type === 'DEBIT')
+                                        <span class="text-red-600 font-semibold">
+                                            Débito
+                                        </span>
+                                    @elseif($provision->transaction_type === 'CREDIT')
+                                        <span class="text-green-600 font-semibold">
+                                            Crédito
+                                        </span>
+                                    @else
+                                        <span class="text-gray-600">
+                                            {{ $provision->transaction_type }}
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <!-- Ações -->
+                                <td class="px-6 py-3">
+                                    <div class="flex items-center justify-center gap-2">
+
                                         <a href="/provision/{{ $provision->id }}"
                                         class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">
                                             Visualizar
                                         </a>
-                                    </td>
-                                    <td class="px-6 py-3 text-center">
-                                        <form action="/provision/{{ $provision->id }}" method="POST"
+
+                                        <a href="/installments/{{ $provision->id }}"
+                                        class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-xs">
+                                            Parcelas
+                                        </a>
+
+                                        <form action="/provision/{{ $provision->id }}"
+                                            method="POST"
                                             onsubmit="return confirm('Tem certeza que deseja excluir este provisionamento?')">
                                             @csrf
                                             @method('DELETE')
@@ -281,25 +306,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 Excluir
                                             </button>
                                         </form>
-                                    </td>
-                                    <td class="px-6 py-3 text-center">
-                                        <a href="/installments/{{ $provision->id }}"
-                                        class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">
-                                            Parcelas
-                                        </a>
-                                    </td>
-                                </tr>
 
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-6 text-gray-400">
-                                        Nenhum provisionamento encontrado
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+                                    </div>
+                                </td>
 
-                    </table>
+                            </tr>
+
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-6 text-gray-400">
+                                    Nenhum provisionamento encontrado
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
                 </div>
 
             </div>
