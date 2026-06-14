@@ -12,8 +12,8 @@ use PHPUnit\Logging\OpenTestReporting\Status;
 
 class ProvisionController extends Controller
 {
-
-    public function viewCreate(){
+    public function viewCreate()
+    {
         return view('create-provision');
     }
 
@@ -34,15 +34,15 @@ class ProvisionController extends Controller
 
         $month = "";
 
-        if($request->filled('month') && $request->month !== 'todos'){
+        if ($request->filled('month') && $request->month !== 'todos') {
 
-            try{    
+            try {
                 $month = is_numeric($request->month)
                     ? (int) $request->month
                     : Carbon::createFromLocaleFormat('F', 'pt_BR', $request->month)->month;
 
-                    $query->whereMonth('competence_date', $month);
-            }catch(InvalidFormatException $e ) {
+                $query->whereMonth('competence_date', $month);
+            } catch (InvalidFormatException $e) {
                 $month = Carbon::now()->month;
 
                 $month = Carbon::create()
@@ -54,12 +54,12 @@ class ProvisionController extends Controller
             $month = "todos";
         }
 
-        if($request->filled('year') && strlen($request->year) === 4){
+        if ($request->filled('year') && strlen($request->year) === 4) {
             try {
                 $year = (int) $request->year;
 
                 $query->whereYear("competence_date", $year);
-            }catch(InvalidFormatException $e){
+            } catch (InvalidFormatException $e) {
                 $year = Carbon::now()->year;
             }
         }
@@ -78,8 +78,8 @@ class ProvisionController extends Controller
 
             $sum = $installments->sum('amount') ?: $provision->base_amount;
 
-            if(!array_key_exists($provision->competence_date, $chartValues)){
-                $chartValues[$provision->competence_date] = 0;    
+            if (!array_key_exists($provision->competence_date, $chartValues)) {
+                $chartValues[$provision->competence_date] = 0;
             }
 
             $chartValues[$provision->competence_date] += $sum;
@@ -110,10 +110,11 @@ class ProvisionController extends Controller
         $user = $request->user();
 
         $request->merge([
-            'base_amount' => str_replace(',', '.', $request->base_amount)
+            'base_amount' => str_replace(',', '.', $request->base_amount),
         ]);
 
         $data = $request->validate([
+            'transaction_type' => 'required|in:DEBIT,CREDIT',
             'description' => 'required|string|max:255',
             'base_amount' => 'required|string|min:0',
             'interest_rate' => 'nullable|numeric|min:0',
@@ -142,7 +143,7 @@ class ProvisionController extends Controller
 
             for ($i = 1; $i <= $installments; $i++) {
 
-                    // tempo (t)
+                // tempo (t)
                 switch ($data['interest_period'] ?? 'MONTH') {
 
                     case 'DAY':
@@ -198,7 +199,7 @@ class ProvisionController extends Controller
 
                 $status = 'OPEN';
 
-                if ($dueDate < Carbon::parse(time())){
+                if ($dueDate < Carbon::parse(time())) {
                     $status = 'LATE';
                 }
 
@@ -225,6 +226,7 @@ class ProvisionController extends Controller
             ->findOrFail($id);
 
         $data = $request->validate([
+            'transaction_type' => 'required|in:DEBIT,CREDIT',
             'description' => 'required|string|max:255',
             'base_amount' => 'required|numeric|min:0',
             'interest_rate' => 'nullable|numeric|min:0',

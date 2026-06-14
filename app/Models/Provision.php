@@ -17,15 +17,16 @@ class Provision extends Model
         'interest_period',
         'installments',
         'competence_date',
-        'first_due_date'
+        'first_due_date',
+        'transaction_type',
     ];
-
     public function provisionInstallments()
     {
         return $this->hasMany(ProvisionInstallment::class);
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

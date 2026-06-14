@@ -39,8 +39,13 @@ class ProvisionInstallmentController extends Controller
 
         $year = now()->year;
 
-        $installments = ProvisionInstallment::whereHas('provision', function ($query) use ($user) {
+        $installments = ProvisionInstallment::whereHas('provision', function ($query) use ($user, $request) {
                 $query->where('user_id', $user->id);
+                if($request->filled("transaction_type")){
+                    $query->where('transaction_type', $request->transaction_type);
+                }else {
+                    $query->where('transaction_type', "DEBIT");
+                }
             });
 
         $month = $request->filled('month');
