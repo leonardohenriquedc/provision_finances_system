@@ -82,7 +82,7 @@
                                         Em aberto
                                     </option>
                                     <option value="PAID" {{ request('status') == 'PAID' ? 'selected' : '' }}>
-                                        Pago
+                                        Cumprido
                                     </option>
                                     <option value="LATE" {{ request('status') == 'LATE' ? 'selected' : '' }}>
                                         Atrasado
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     backgroundColor: 'rgba(59, 130, 246, 100)',
                 },
                 {
-                    label: 'Pago',
+                    label: 'Cumprido',
                     data: paid,
                     backgroundColor: 'rgba(34, 197, 94, 100)'
                 },
