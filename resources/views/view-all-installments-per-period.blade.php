@@ -212,9 +212,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <!-- Status -->
                                     <td class="px-6 py-3 text-center">
                                         @if($installment->status === 'PAID')
-                                            <span class="text-green-600 font-semibold">Pago</span>
+                                            <span class="text-green-600 font-semibold">Cumprido</span>
                                         @elseif($installment->status === 'LATE')
                                             <span class="text-red-600 font-semibold">Atrasado</span>
+                                        @elseif($installment->status === 'LATE_PAYMENT')
+                                            <span class="text-black-600 font-semibold">Cumprido Atrasado</span>
                                         @else
                                             <span class="text-yellow-600 font-semibold">Em aberto</span>
                                         @endif
