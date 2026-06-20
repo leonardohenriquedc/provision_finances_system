@@ -19,14 +19,14 @@
                 </div>
 
                 <div class="bg-white p-4 rounded-lg shadow">
-                    <p class="text-sm text-gray-500">Pago</p>
+                    <p class="text-sm text-gray-500">Cumprido</p>
                     <p class="text-xl font-bold text-green-600">
                         R$ {{ number_format($paid, 2, ',', '.') }}
                     </p>
                 </div>
 
                 <div class="bg-white p-4 rounded-lg shadow">
-                    <p class="text-sm text-gray-500">Pendente</p>
+                    <p class="text-sm text-gray-500">Provisionado não cumprido</p>
                     <p class="text-xl font-bold text-red-600">
                         R$ {{ number_format($pending, 2, ',', '.') }}
                     </p>
@@ -44,7 +44,7 @@
             <!-- Filtro -->
             <div class="bg-white p-4 rounded-lg shadow mb-6">
                 <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 items-end">
-                    
+
                     <div class="flex flex-col gap-1">
                         <label for="year" class="text-sm font-medium text-gray-700">
                             Ano selecionado
