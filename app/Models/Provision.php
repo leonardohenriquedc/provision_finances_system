@@ -2,23 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Provision extends Model
 {
-    protected $table = 'provisions';
+    use HasFactory;
+    protected $table = "provisions";
 
     protected $fillable = [
-        'description',
-        'user_id',
-        'base_amount',
-        'interest_rate',
-        'interest_type',
-        'interest_period',
-        'installments',
-        'competence_date',
-        'first_due_date',
-        'transaction_type',
+        "description",
+        "user_id",
+        "base_amount",
+        "interest_rate",
+        "interest_type",
+        "interest_period",
+        "installments",
+        "competence_date",
+        "first_due_date",
+        "transaction_type",
     ];
     public function provisionInstallments()
     {
