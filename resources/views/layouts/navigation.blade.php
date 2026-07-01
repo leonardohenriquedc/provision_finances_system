@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="block h-9 w-auto">
                     </a>
                 </div>
 
@@ -25,7 +25,7 @@
                 </div>
                 @endif
             </div>
-            
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
@@ -99,7 +99,7 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
-                </x-responsive-nav-link>                
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('register')">
                     {{ __('Register') }}
                 </x-responsive-nav-link>
