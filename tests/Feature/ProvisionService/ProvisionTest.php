@@ -4,6 +4,7 @@ namespace Tests\Feature\ProvisionService;
 
 use App\Models\Provision;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -81,5 +82,32 @@ class ProvisionTest extends TestCase
         $response->assertRedirect("/provisions");
 
         $this->assertDatabaseMissing("provisions", ["id" => $provision->id]);
+    }
+
+    public function test_index_provision()
+    {
+        $user = User::factory()->create();
+        Provision::factory()
+            ->count(3)
+            ->create(["user_id" => $user->id]);
+
+        $response = $this->actingAs($user)->get("/dashboard");
+
+        $response->assertStatus(200);
+        $response->assertViewHas("provisions");
+        $response->assertViewHas("chartValues");
+        $response->assertViewHas("total");
+        $response->assertViewHas("paid");
+        $response->assertViewHas("pending");
+        $response->assertViewHas("month");
+
+        $this->assertNotNull($response->viewData("provisions"));
+        $this->assertNotNull($response->viewData("chartValues"));
+        $this->assertNotNull($response->viewData("total"));
+        $this->assertNotNull($response->viewData("paid"));
+        $this->assertNotNull($response->viewData("pending"));
+        $this->assertNotNull($response->viewData("month"));
+
+        $this->assertNotEmpty($response->viewData("provisions"));
     }
 }

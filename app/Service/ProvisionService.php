@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Models\Provision;
 use App\Models\ProvisionInstallment;
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +15,83 @@ class ProvisionService
      * Create a new class instance.
      */
     public function __construct() {}
+
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        $query = Provision::with("provisionInstallments")->where(
+            "user_id",
+            $user->id,
+        );
+
+        $month = "";
+
+        if ($request->filled("month") && $request->month !== "todos") {
+            try {
+                $month = is_numeric($request->month)
+                    ? (int) $request->month
+                    : Carbon::createFromLocaleFormat(
+                        "F",
+                        "pt_BR",
+                        $request->month,
+                    )->month;
+
+                $query->whereMonth("competence_date", $month);
+            } catch (InvalidFormatException $e) {
+                $month = Carbon::now()->month;
+
+                $month = Carbon::create()->month($month)->translatedFormat("F");
+            }
+        } else {
+            $month = "todos";
+        }
+
+        if ($request->filled("year") && strlen($request->year) === 4) {
+            try {
+                $year = (int) $request->year;
+
+                $query->whereYear("competence_date", $year);
+            } catch (InvalidFormatException $e) {
+                $year = Carbon::now()->year;
+            }
+        }
+
+        $provisions = $query->get();
+
+        // KPIs
+        $total = 0;
+        $paid = 0;
+        $pending = 0;
+
+        $chartValues = [];
+
+        foreach ($provisions as $provision) {
+            $installments = $provision->provisionInstallments;
+
+            $sum = $installments->sum("amount") ?: $provision->base_amount;
+
+            if (!array_key_exists($provision->competence_date, $chartValues)) {
+                $chartValues[$provision->competence_date] = 0;
+            }
+
+            $chartValues[$provision->competence_date] += $sum;
+
+            $total += $sum;
+
+            foreach ($installments as $i) {
+                if ($i->status === "PAID") {
+                    $paid += $i->amount;
+                } else {
+                    $pending += $i->amount;
+                }
+            }
+        }
+
+        $datas = [$provisions, $chartValues, $total, $paid, $pending, $month];
+
+        return $datas;
+    }
 
     public function create(Request $request)
     {
