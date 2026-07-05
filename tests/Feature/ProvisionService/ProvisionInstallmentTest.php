@@ -27,6 +27,7 @@ class ProvisionInstallmentTest extends TestCase
 
         $this->provision = Provision::factory()->create([
             "user_id" => $this->user->id,
+            "transaction_type" => "DEBIT",
         ]);
 
         $this->installment = ProvisionInstallment::create([
