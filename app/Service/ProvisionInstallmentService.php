@@ -88,6 +88,8 @@ class ProvisionInstallmentService
             $installments->where("status", $request->status);
         }
 
+        $installments->orderBy("installment_number", 'asc');
+
         $installments = $installments->get();
 
         $total = 0;
