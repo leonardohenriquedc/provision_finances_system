@@ -50,9 +50,10 @@ class ProvisionController extends Controller
                     "month",
                 ),
             );
-        } else {
-            return view("error");
         }
+
+        return view("error");
+
     }
     public function create(Request $request)
     {
@@ -62,11 +63,11 @@ class ProvisionController extends Controller
 
         if ($status === 201) {
             return redirect()->route("dashboard");
-        } else {
-            return redirect()
-                ->route("error")
-                ->with("message", "Provision não foi criado com sucesso.");
         }
+        return redirect()
+            ->route("error")
+            ->with("message", "Provision não foi criado com sucesso.");
+
     }
 
     public function update($id, Request $request)
@@ -77,11 +78,12 @@ class ProvisionController extends Controller
         error_log($status);
         if ($status === 201) {
             return redirect()->route("dashboard");
-        } else {
-            return redirect()
-                ->route("error")
-                ->with("message", "Provision não foi atualizado com sucesso.");
         }
+
+        return redirect()
+            ->route("error")
+            ->with("message", "Provision não foi atualizado com sucesso.");
+
     }
 
     public function delete($id, Request $request)
@@ -92,10 +94,11 @@ class ProvisionController extends Controller
 
         if ($status === 204) {
             return redirect()->route("provisions");
-        } else {
-            return redirect()
-                ->route("error")
-                ->with("message", "Provision não foi deletado com sucesso.");
         }
+
+        return redirect()
+            ->route("error")
+            ->with("message", "Provision não foi deletado com sucesso.");
+
     }
 }
