@@ -281,6 +281,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     </table>
                 </div>
 
+                <!-- Paginação -->
+                @if ($installments->hasPages())
+                    <div class="flex items-center justify-between mt-6">
+                        <div class="text-sm text-gray-600">
+                            Exibindo {{ $installments->firstItem() }}–{{ $installments->lastItem() }} de {{ $installments->total() }}
+                        </div>
+
+                        <div class="flex gap-2">
+                            @if ($installments->onFirstPage())
+                                <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                    ← Anterior
+                                </span>
+                            @else
+                                <a href="{{ $installments->previousPageUrl() }}"
+                                   class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                    ← Anterior
+                                </a>
+                            @endif
+
+                            @if ($installments->hasMorePages())
+                                <a href="{{ $installments->nextPageUrl() }}"
+                                   class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                    Próximo →
+                                </a>
+                            @else
+                                <span class="px-4 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                    Próximo →
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
             </div>
 
         </div>
