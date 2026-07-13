@@ -88,10 +88,7 @@ class ProvisionInstallmentService
             $installments->where("status", $request->status);
         }
 
-        $installments->orderBy("installment_number", 'asc');
-        $installments->paginate(10);
-
-        $installments = $installments->get();
+        $installments = $installments->orderBy("installment_number", 'asc')->paginate(10);
 
         $datas_chart = $this->chart_graphics_values($request->filled("transaction_type") ? $request->transaction_type : "DEBIT", $year, $user);
 
