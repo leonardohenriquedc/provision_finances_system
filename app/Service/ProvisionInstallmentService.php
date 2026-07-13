@@ -89,6 +89,41 @@ class ProvisionInstallmentService
         }
 
         $installments->orderBy("installment_number", 'asc');
+        $installments->paginate(10);
+
+        $installments = $installments->get();
+
+        $datas_chart = $this->chart_graphics_values($request->filled("transaction_type") ? $request->transaction_type : "DEBIT", $year, $user);
+
+        $labels = array_column($datas_chart["values"], "label");
+        $totalMonth = array_column($datas_chart["values"], "totalMonth");
+        $paid = array_column($datas_chart["values"], "paid");
+        $late = array_column($datas_chart["values"], "late");
+        $total = $datas_chart["total"];
+
+        return [
+            $installments,
+            $month,
+            $total,
+            $labels,
+            $totalMonth,
+            $paid,
+            $late,
+        ];
+    }
+
+    private function chart_graphics_values($transaction_type, $year, $user){
+        $installments = ProvisionInstallment::whereHas("provision", function ($query) use ($user, $transaction_type) {
+            $query->where("user_id", $user->id);
+            if ($transaction_type) {
+                $query->where("transaction_type", $transaction_type);
+            }
+        });
+
+        if ($year) {
+            $installments->whereYear("due_date", $year);
+        }
+
 
         $installments = $installments->get();
 
@@ -135,20 +170,21 @@ class ProvisionInstallmentService
             }
         }
 
-        $labels = array_keys($chart);
-        $totalMonth = array_column($chart, "total");
-        $paid = array_column($chart, "paid");
-        $late = array_column($chart, "late");
+        $values = [];
+        foreach ($chart as $label => $data) {
+            $values[] = [
+                "label" => $label,
+                "totalMonth" => $data["total"],
+                "paid" => $data["paid"],
+                "late" => $data["late"],
+            ];
+        }
 
         return [
-            $installments,
-            $month,
-            $total,
-            $labels,
-            $totalMonth,
-            $paid,
-            $late,
+            "values" => $values,
+            "total" => $total,
         ];
+
     }
 
     public function updateInstallmentStatus($id, Request $request)
