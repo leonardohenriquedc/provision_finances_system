@@ -15,7 +15,7 @@
 
         <div>
             <h3 class="text-xl font-semibold text-gray-800">
-                Total: {{ $total }}
+                Total: R$ {{ number_format($total, 2, ',', '.') }}
             </h3>
         </div>
 
@@ -283,6 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Paginação -->
                 @if ($installments->hasPages())
+                    @php
+                        $installments->appends(request()->query());
+                    @endphp
+
                     <div class="flex items-center justify-between mt-6">
                         <div class="text-sm text-gray-600">
                             Exibindo {{ $installments->firstItem() }}–{{ $installments->lastItem() }} de {{ $installments->total() }}
