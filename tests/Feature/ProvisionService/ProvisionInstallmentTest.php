@@ -207,7 +207,7 @@ class ProvisionInstallmentTest extends TestCase
 
         $installments = $response->viewData("installments");
         $this->assertCount(1, $installments);
-        $this->assertEquals(150.0, (float) $installments->first()->amount);
+        $this->assertEquals(150.0, (float) $installments[0]->amount);
     }
 
     public function test_view_current_installments_filters_by_transaction_type(): void
